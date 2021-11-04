@@ -23,7 +23,7 @@ public class Controller {
 
         //1.获取总数数据
         Integer dauTotal = publisherService.getDauTotal(date);
-        //Double gmvTotal = publisherService.getGmvTotal(date);
+        Double gmvTotal = publisherService.getGmvTotal(date);
 
         //2.创建List集合用来存放结果数据
         ArrayList<Map> result = new ArrayList<>();
@@ -41,14 +41,14 @@ public class Controller {
         devMap.put("value", 233);
 
         //创建存放新增交易额的Map集合
-        /*HashMap<String, Object> gmvMap = new HashMap<>();
+        HashMap<String, Object> gmvMap = new HashMap<>();
         gmvMap.put("id", "order_amount");
         gmvMap.put("name", "新增交易额");
-        gmvMap.put("value", gmvTotal);*/
+        gmvMap.put("value", gmvTotal);
 
         result.add(dauMap);
         result.add(devMap);
-        //result.add(gmvMap);
+        result.add(gmvMap);
 
         return JSONObject.toJSONString(result);
     }
