@@ -6,6 +6,7 @@ import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
@@ -16,8 +17,13 @@ public class Flink03_WordCount_Unbounded {
     public static void main(String[] args) throws Exception {
         //获取流的执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        //StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(new Configuration());
 
+        //并行度设置为1
         env.setParallelism(1);
+
+        //全局都断开（算子链）
+        env.disableOperatorChaining();
 
         //获取有界数据（文件中的数据）
         DataStreamSource<String> streamSource = env.socketTextStream("hadoop102", 9999);
@@ -31,7 +37,14 @@ public class Flink03_WordCount_Unbounded {
                     out.collect(word);
                 }
             }
-        });
+        })
+                //断开前面的算子链
+                //.startNewChain()
+                //与前后都断开
+                //.disableChaining()
+                //.slotSharingGroup("group1")
+                //.setParallelism(5)
+                ;
 
         //将单词组成Tuple2元组
         /*SingleOutputStreamOperator<Tuple2<String, Integer>> wordToOneStream = wordDStream.map(new MapFunction<String, Tuple2<String, Integer>>() {

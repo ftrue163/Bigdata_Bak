@@ -11,7 +11,7 @@ import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.Collector;
 
-public class Flink01_WordCount_Bounded {
+public class Flink02_WordCount_Bounded {
     public static void main(String[] args) throws Exception {
         //获取流的执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
