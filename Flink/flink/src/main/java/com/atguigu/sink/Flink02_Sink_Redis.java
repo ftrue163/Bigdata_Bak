@@ -19,11 +19,11 @@ public class Flink02_Sink_Redis {
         env.setParallelism(1);
 
         //2.从端口读取数据
-        SingleOutputStreamOperator<WaterSensor> waterSensorDStream = env.socketTextStream("localhost", 9999)
+        SingleOutputStreamOperator<WaterSensor> waterSensorDStream = env.socketTextStream("hadoop102", 9999)
                 .map(new MapFunction<String, WaterSensor>() {
                     @Override
                     public WaterSensor map(String value) throws Exception {
-                        String[] split = value.split(",");
+                        String[] split = value.split(" ");
                         return new WaterSensor(split[0], Long.parseLong(split[1]), Integer.parseInt(split[2]));
                     }
                 });
@@ -43,17 +43,32 @@ public class Flink02_Sink_Redis {
     }
 
     public static class MyRedisMapper implements RedisMapper<String> {
+        /**
+         * additionalKey：指的是在使用Hash类型时，redis的Key
+         * @return
+         */
         @Override
         public RedisCommandDescription getCommandDescription() {
-            return new RedisCommandDescription(RedisCommand.SET);
+            return new RedisCommandDescription(RedisCommand.HSET, "0625");
+            //return new RedisCommandDescription(RedisCommand.SET);
         }
 
+        /**
+         * 在使用Hash类型时，这个方法指定的key为Hash的field
+         * @param data
+         * @return
+         */
         @Override
         public String getKeyFromData(String data) {
             JSONObject jsonObject = JSONObject.parseObject(data);
             return jsonObject.getString("id");
         }
 
+        /**
+         * 指定存入的数据
+         * @param data
+         * @return
+         */
         @Override
         public String getValueFromData(String data) {
             return data;
