@@ -46,6 +46,7 @@ public class Flink03_Sink_Es {
         httpHosts.add(new HttpHost("hadoop103", 9200));
         httpHosts.add(new HttpHost("hadoop104", 9200));
 
+        // use a ElasticsearchSink.Builder to create an ElasticsearchSink
         ElasticsearchSink.Builder<String> esBuilder = new ElasticsearchSink.Builder<>(httpHosts, new ElasticsearchSinkFunction<String>() {
             @Override
             public void process(String element, RuntimeContext runtimeContext, RequestIndexer requestIndexer) {
@@ -58,8 +59,21 @@ public class Flink03_Sink_Es {
         });
 
         //数据来一条写一条
+        // configuration for the bulk requests; this instructs the sink to emit after every element, otherwise they would be buffered
         esBuilder.setBulkFlushMaxActions(1);
 
+        // provide a RestClientFactory for custom configuration on the internally created REST client
+        /*esBuilder.setRestClientFactory(
+                restClientBuilder -> {
+                    restClientBuilder.setDefaultHeaders(...)
+                    restClientBuilder.setMaxRetryTimeoutMillis(...)
+                    restClientBuilder.setPathPrefix(...)
+                    restClientBuilder.setHttpClientConfigCallback(...)
+                }
+        );*/
+
+
+        // finally, build and add the sink to the job's pipeline
         jsonStrDStream.addSink(esBuilder.build());
 
         env.execute();

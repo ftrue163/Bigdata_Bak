@@ -1,6 +1,7 @@
 package com.atguigu;
 
 
+import org.apache.flink.api.common.RuntimeExecutionMode;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
@@ -15,6 +16,12 @@ public class Flink02_WordCount_Bounded {
     public static void main(String[] args) throws Exception {
         //获取流的执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+
+
+        //设置执行模式（Execution Mode）
+        env.setRuntimeMode(RuntimeExecutionMode.BATCH);
+        //env.setRuntimeMode(RuntimeExecutionMode.AUTOMATIC);
+
 
         //获取有界数据（文件中的数据）
         DataStreamSource<String> streamSource = env.readTextFile("flink/input/word.txt");

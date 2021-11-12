@@ -1,6 +1,7 @@
 package com.atguigu;
 
 
+import org.apache.flink.api.common.RuntimeExecutionMode;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.typeinfo.Types;
@@ -21,6 +22,7 @@ public class Flink03_WordCount_Unbounded {
 
         //并行度设置为1
         env.setParallelism(1);
+
 
         //全局都断开（算子链）
         env.disableOperatorChaining();
