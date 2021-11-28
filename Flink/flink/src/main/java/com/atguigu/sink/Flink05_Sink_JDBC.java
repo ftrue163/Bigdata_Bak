@@ -10,6 +10,11 @@ import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 
+/**
+ * JDBC sink: 适合于单表的数据写入，因为如果多张表的话，每张表的字段个数和字段类型可能不一样
+ *
+ *
+ */
 public class Flink05_Sink_JDBC {
     public static void main(String[] args) throws Exception {
         //1.获取流的执行环境

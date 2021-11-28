@@ -26,7 +26,8 @@ public class Flink_CDCWithCustomerSchema {
                 .username("root")
                 .password("123456zzQ!?#")
                 .databaseList("gmall_flink_0625")
-                .startupOptions(StartupOptions.initial())
+                //.startupOptions(StartupOptions.initial())
+                .startupOptions(StartupOptions.latest())
                 .deserializer(new MyFlinkCDCDeSer())
                 .build();
 
@@ -34,6 +35,7 @@ public class Flink_CDCWithCustomerSchema {
         DataStreamSource<String> streamSource = env.addSource(sourceFunction);
 
         //将数据写入Kafka主题中
+        streamSource.print();
         streamSource.addSink(MyKafkaUtil.getKafkaSink("ods_base_db"));
 
         env.execute();
