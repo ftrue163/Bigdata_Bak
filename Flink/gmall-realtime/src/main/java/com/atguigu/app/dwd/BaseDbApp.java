@@ -74,7 +74,7 @@ public class BaseDbApp {
                 .build();
         DataStreamSource<String> cdcDS = env.addSource(sourceFunction);
         //测试 打印
-        cdcDS.print("MySQL配置表>>>>>>");
+        //cdcDS.print("MySQL配置表>>>>>>");
         //value的数据类型选定为TableProcess   JSONObject也可以  但是没有TableProcess更好
         MapStateDescriptor<String, TableProcess> mapStateDescriptor = new MapStateDescriptor<>("map-state", String.class, TableProcess.class);
         BroadcastStream<String> broadcastStream = cdcDS.broadcast(mapStateDescriptor);

@@ -18,7 +18,7 @@
 
     <property>
         <name>javax.jdo.option.ConnectionPassword</name>
-        <value>123456zzQ!?#</value>
+        <value>123456</value>
     </property>
 
     <property>
@@ -29,7 +29,7 @@
     <!-- 指定存储元数据要连接的地址 -->
     <property>
         <name>hive.metastore.uris</name>
-        <value>thrift://hadoop102:9083</value>
+        <value>thrift://hadoop202:9083</value>
     </property>
 
 
@@ -45,7 +45,7 @@
 
     <property>
         <name>hive.server2.thrift.bind.host</name>
-        <value>hadoop102</value>
+        <value>hadoop202</value>
     </property>
 
     <!-- hiveserver2的高可用参数，开启此参数可以提高hiveserver2的启动速度 -->
@@ -72,7 +72,7 @@
     <!--Spark依赖位置（注意：端口号8020必须和namenode的端口号一致）-->
     <property>
         <name>spark.yarn.jars</name>
-        <value>hdfs://hadoop102:8020/spark-jars/*</value>
+        <value>hdfs://hadoop202:8020/spark-jars/*</value>
     </property>
 
     <!--Hive执行引擎-->

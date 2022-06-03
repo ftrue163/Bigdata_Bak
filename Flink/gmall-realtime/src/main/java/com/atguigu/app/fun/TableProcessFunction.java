@@ -70,6 +70,34 @@ public class TableProcessFunction extends BroadcastProcessFunction<JSONObject, S
         }
     }
 
+    //任务：1.将广播流中的数据（TableProcess表的数据）保存到MapState中  2.检查HBase表是否存在，如果不存在则建表
+    //value:{"database":"", "tableName":"table_process", "before":{}, "after":{"source_table":""....}, "type":""}
+    //table_process表字段：source_table  operate_type  sink_type sink_table  sink_columns sink_pk  sink_extend
+    //key：source_table + operate_type
+    //value: TableProcess(封装after内的数据)
+    @Override
+    public void processBroadcastElement(String value, BroadcastProcessFunction<JSONObject, String, JSONObject>.Context ctx, Collector<JSONObject> out) throws Exception {
+        //1.解析数据为JavaBean  即为TableProcess
+        JSONObject jsonObject = JSONObject.parseObject(value);
+        TableProcess tableProcess = JSONObject.parseObject(jsonObject.getString("after"), TableProcess.class);
+
+        //2.检查HBase表是否存在，如果不存在则建表
+        String sinkType = tableProcess.getSinkType();
+        if ("hbase".equals(sinkType)) {
+            checkTable(tableProcess.getSinkTable(),
+                    tableProcess.getSinkColumns(),
+                    tableProcess.getSinkPK(),
+                    tableProcess.getSinkExtend());
+        }
+
+        //3.将数据写入状态，广播出去
+        BroadcastState<String, TableProcess> broadcastState = ctx.getBroadcastState(mapStateDescriptor);
+        String key = tableProcess.getSourceTable() + "-" + tableProcess.getOperateType();
+        broadcastState.put(key, tableProcess);
+    }
+
+
+
     //根据广播状态中sink_columns字段的数据  过滤所需字段
     //after:{"id":"","tm_name":"","logo_url":"","name":""}  sinkColumns:id,tm_name
     //{"id":"","tm_name":""}
@@ -98,32 +126,6 @@ public class TableProcessFunction extends BroadcastProcessFunction<JSONObject, S
                 after.remove(key);
             }
         }*/
-    }
-
-    //任务：1.将广播流中的数据（TableProcess表的数据）保存到MapState中  2.检查HBase表是否存在，如果不存在则建表
-    //value:{"database":"", "tableName":"table_process", "before":{}, "after":{"source_table":""....}, "type":""}
-    //table_process表字段：source_table  operate_type  sink_type sink_table  sink_columns sink_pk  sink_extend
-    //key：source_table + operate_type
-    //value: TableProcess(封装after内的数据)
-    @Override
-    public void processBroadcastElement(String value, BroadcastProcessFunction<JSONObject, String, JSONObject>.Context ctx, Collector<JSONObject> out) throws Exception {
-        //1.解析数据为JavaBean  即为TableProcess
-        JSONObject jsonObject = JSONObject.parseObject(value);
-        TableProcess tableProcess = JSONObject.parseObject(jsonObject.getString("after"), TableProcess.class);
-
-        //2.检查HBase表是否存在，如果不存在则建表
-        String sinkType = tableProcess.getSinkType();
-        if ("hbase".equals(sinkType)) {
-            checkTable(tableProcess.getSinkTable(),
-                    tableProcess.getSinkColumns(),
-                    tableProcess.getSinkPK(),
-                    tableProcess.getSinkExtend());
-        }
-
-        //3.将数据写入状态，广播出去
-        BroadcastState<String, TableProcess> broadcastState = ctx.getBroadcastState(mapStateDescriptor);
-        String key = tableProcess.getSourceTable() + "-" + tableProcess.getOperateType();
-        broadcastState.put(key, tableProcess);
     }
 
 

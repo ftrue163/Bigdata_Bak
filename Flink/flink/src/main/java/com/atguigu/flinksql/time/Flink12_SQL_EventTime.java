@@ -20,7 +20,7 @@ public class Flink12_SQL_EventTime {
         Configuration configuration = tableEnv.getConfig().getConfiguration();
         configuration.setString("table.local-time-zone", "GMT");
 
-        //sql方式 创建File类型的表  指定eventtime和watermark
+        //sql方式 创建File类型的表  指定event_time和watermark
         tableEnv.executeSql("create table sensor (" +
                 "  id string," +
                 "  ts bigint," +

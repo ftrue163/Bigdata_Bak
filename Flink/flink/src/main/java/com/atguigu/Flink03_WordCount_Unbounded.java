@@ -21,11 +21,11 @@ public class Flink03_WordCount_Unbounded {
         //StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(new Configuration());
 
         //并行度设置为1
-        env.setParallelism(1);
+        //env.setParallelism(1);
 
 
         //全局都断开（算子链）
-        env.disableOperatorChaining();
+        //env.disableOperatorChaining();
 
         //获取有界数据（文件中的数据）
         DataStreamSource<String> streamSource = env.socketTextStream("hadoop102", 9999);

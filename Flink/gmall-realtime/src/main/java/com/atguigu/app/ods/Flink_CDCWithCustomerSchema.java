@@ -26,7 +26,9 @@ public class Flink_CDCWithCustomerSchema {
                 .username("root")
                 .password("123456zzQ!?#")
                 .databaseList("gmall_flink_0625")
-                //.startupOptions(StartupOptions.initial())
+                //.tableList("yourDatabaseName.yourTableName") // set captured table
+                //.startupOptions(StartupOptions.initial())   //默认值为initial
+                //可选值为 initial、earliest、latest
                 .startupOptions(StartupOptions.latest())
                 .deserializer(new MyFlinkCDCDeSer())
                 .build();

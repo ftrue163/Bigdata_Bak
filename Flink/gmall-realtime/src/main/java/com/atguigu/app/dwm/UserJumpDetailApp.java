@@ -60,6 +60,7 @@ public class UserJumpDetailApp {
         KeyedStream<JSONObject, String> keyedStream = jsonObjWithWMDS.keyBy(jsonObj -> jsonObj.getJSONObject("common").getString("mid"));
 
         //TODO 5.定义模式序列
+        //当有within方法时  可以处理乱序数据问题
         Pattern<JSONObject, JSONObject> pattern = Pattern.<JSONObject>begin("start").where(new SimpleCondition<JSONObject>() {
             @Override
             public boolean filter(JSONObject value) throws Exception {

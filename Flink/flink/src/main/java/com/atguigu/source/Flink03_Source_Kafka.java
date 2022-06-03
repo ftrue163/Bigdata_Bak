@@ -22,8 +22,9 @@ public class Flink03_Source_Kafka {
         properties.setProperty("auto.offset.reset", "latest");
 
         DataStreamSource<String> streamSource = env.addSource(new FlinkKafkaConsumer<String>("sensor", new SimpleStringSchema(), properties))
-                .setParallelism(4)
-                ;
+                .setParallelism(4);
+
+
 
         streamSource.print("kafka:");
 
